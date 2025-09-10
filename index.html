@@ -53,33 +53,27 @@
     </main>
 
     <script>
-        const user = "zRenatokkj";
-        const token = "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";
+        const user = "zRenatokkj"; // 👈 Seu usuário GitHub
 
         // Dark Mode Toggle
         const themeToggleBtn = document.getElementById('theme-toggle');
         const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
         const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
-        // Check if there is a saved theme
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            // Show the light icon and hide the dark icon
             themeToggleLightIcon.classList.remove('hidden');
             themeToggleDarkIcon.classList.add('hidden');
             document.documentElement.classList.add('dark');
         } else {
-            // Show the dark icon and hide the light icon
             themeToggleDarkIcon.classList.remove('hidden');
             themeToggleLightIcon.classList.add('hidden');
             document.documentElement.classList.remove('dark');
         }
 
         themeToggleBtn.addEventListener('click', function() {
-            // Toggle icons inside button
             themeToggleDarkIcon.classList.toggle('hidden');
             themeToggleLightIcon.classList.toggle('hidden');
 
-            // If is set in localStorage
             if (localStorage.getItem('color-theme')) {
                 if (localStorage.getItem('color-theme') === 'light') {
                     document.documentElement.classList.add('dark');
@@ -88,8 +82,6 @@
                     document.documentElement.classList.remove('dark');
                     localStorage.setItem('color-theme', 'light');
                 }
-
-                // If NOT set in localStorage
             } else {
                 if (document.documentElement.classList.contains('dark')) {
                     document.documentElement.classList.remove('dark');
@@ -101,13 +93,9 @@
             }
         });
 
-
+        // 🔹 Função de fetch SEM TOKEN (apenas para repositórios públicos)
         async function fetchFromGitHub(url) {
-            const res = await fetch(url, {
-                headers: {
-                    Authorization: `token ${token}`
-                }
-            });
+            const res = await fetch(url);
             if (!res.ok) throw new Error(`Erro ${res.status}: ${res.statusText}`);
             return res.json();
         }
@@ -172,7 +160,7 @@
             const li = document.createElement("li");
             li.dataset.type = "file";
             li.dataset.ext = "." + ext;
-            li.className = "hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded-md transition-colors duration-200"; // Added hover effect
+            li.className = "hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded-md transition-colors duration-200";
 
             let viewButton = "";
             if (ext === "html") {
@@ -181,10 +169,10 @@
             }
 
             li.innerHTML = `
-        📄 <span class="text-gray-800 dark:text-gray-200">${file.name}</span>
-        <a href="${file.html_url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline ml-2">Abrir no GitHub</a>
-        ${viewButton}
-      `;
+                📄 <span class="text-gray-800 dark:text-gray-200">${file.name}</span>
+                <a href="${file.html_url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline ml-2">Abrir no GitHub</a>
+                ${viewButton}
+            `;
             return li;
         }
 
@@ -192,12 +180,10 @@
             const selected = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
                 .map(c => c.value.toLowerCase());
 
-            // 1. Filtrar os arquivos:
             document.querySelectorAll("#output li[data-type='file']").forEach(li => {
                 li.style.display = selected.includes(li.dataset.ext) ? "list-item" : "none";
             });
 
-            // 2. Ocultar diretórios vazios (de baixo para cima):
             let changed = true;
             while (changed) {
                 changed = false;
@@ -216,16 +202,13 @@
                 });
             }
 
-            // 3. Ocultar repositórios sem arquivos visíveis:
             document.querySelectorAll("#output > div").forEach(repoDiv => {
                 const files = repoDiv.querySelectorAll("li[data-type='file']");
                 const hasVisibleFile = Array.from(files).some(file => file.style.display !== "none");
 
-                // Ocultar ou mostrar o título do repositório
                 const repoTitle = repoDiv.querySelector("h2");
                 repoTitle.style.display = hasVisibleFile ? "block" : "none";
 
-                // Ocultar ou mostrar o container do repositório
                 repoDiv.style.display = hasVisibleFile ? "block" : "none";
             });
         }
