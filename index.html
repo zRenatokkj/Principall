@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 
 <head>
@@ -123,7 +123,7 @@
             parentElement.appendChild(dir);
             await loadFiles(user, repo, file.path, subList);
           } else {
-            parentElement.appendChild(createFileElement(file));
+            parentElement.appendChild(createFileElement(file, repo));
           }
         }
       } catch (err) {
@@ -131,7 +131,7 @@
       }
     }
 
-    function createFileElement(file) {
+    function createFileElement(file, repo) {
       const ext = file.name.split('.').pop().toLowerCase();
       const li = document.createElement("li");
       li.dataset.type = "file";
@@ -140,7 +140,7 @@
 
       let viewButton = "";
       if (ext === "html") {
-        const githubPagesURL = `https://${user}.github.io/${file.repository?.name || ""}/${file.path}`;
+        const githubPagesURL = `https://${user}.github.io/${repo}/${file.path}`;
         viewButton = `<button onclick="window.open('${githubPagesURL}', '_blank')" class="ml-2 px-2 py-0.5 text-xs bg-green-600 hover:bg-green-700 text-white rounded">Visualizar</button>`;
       }
 
